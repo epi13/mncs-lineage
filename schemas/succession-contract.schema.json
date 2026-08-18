@@ -1,0 +1,237 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/mncs-lineage/schemas/succession-contract.schema.json",
+  "title": "MNCS Lineage Succession Contract",
+  "description": "Experimental machine-readable contract for one candidate succession evaluation. This is a research transport shape, not a stable MNCS standard.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "parent_generation",
+    "candidate_recipe",
+    "target_claims",
+    "protected_claims",
+    "development_envelope",
+    "evidence_policy",
+    "promotion_policy",
+    "rollback_policy"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "mncs-lineage/succession-contract/0.1"
+    },
+    "parent_generation": {
+      "$ref": "#/$defs/contentId"
+    },
+    "candidate_recipe": {
+      "$ref": "#/$defs/contentId"
+    },
+    "target_claims": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/claim"
+      },
+      "minItems": 1
+    },
+    "protected_claims": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/claim"
+      },
+      "minItems": 1
+    },
+    "development_envelope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "max_candidates",
+        "max_development_steps",
+        "mutation_scope",
+        "allowed_capabilities",
+        "visibility"
+      ],
+      "properties": {
+        "max_candidates": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "max_development_steps": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "mutation_scope": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "allowed_capabilities": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "visibility": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "development-visible",
+              "selection-observed"
+            ]
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "inheritance_manifest": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/contentId"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "evidence_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "allowed_statuses",
+        "hidden_partitions_required",
+        "proposal_authority_may_self_certify"
+      ],
+      "properties": {
+        "allowed_statuses": {
+          "type": "array",
+          "items": {
+            "enum": ["PASS", "FAIL", "UNKNOWN"]
+          },
+          "contains": {
+            "const": "UNKNOWN"
+          },
+          "uniqueItems": true
+        },
+        "hidden_partitions_required": {
+          "type": "boolean"
+        },
+        "proposal_authority_may_self_certify": {
+          "const": false
+        }
+      }
+    },
+    "promotion_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "all_target_claims_must_pass",
+        "all_protected_claims_must_pass",
+        "unknown_blocks_promotion",
+        "requires_distinct_promotion_authority"
+      ],
+      "properties": {
+        "all_target_claims_must_pass": {
+          "type": "boolean"
+        },
+        "all_protected_claims_must_pass": {
+          "const": true
+        },
+        "unknown_blocks_promotion": {
+          "const": true
+        },
+        "requires_distinct_promotion_authority": {
+          "const": true
+        }
+      }
+    },
+    "rollback_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "required",
+        "retain_parent_artifact",
+        "rollback_test_required"
+      ],
+      "properties": {
+        "required": {
+          "type": "boolean"
+        },
+        "retain_parent_artifact": {
+          "type": "boolean"
+        },
+        "rollback_test_required": {
+          "type": "boolean"
+        }
+      }
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "$defs": {
+    "contentId": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "claim_id",
+        "kind",
+        "requirement",
+        "verifier",
+        "hard_gate"
+      ],
+      "properties": {
+        "claim_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "kind": {
+          "enum": ["target", "protected"]
+        },
+        "requirement": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["operator"],
+          "properties": {
+            "operator": {
+              "enum": [
+                "pass",
+                "eq",
+                "lte",
+                "gte",
+                "gte-parent-margin",
+                "lte-parent-margin"
+              ]
+            },
+            "value": {
+              "type": ["number", "integer", "string", "boolean", "null"]
+            },
+            "margin": {
+              "type": "number"
+            }
+          }
+        },
+        "verifier": {
+          "$ref": "#/$defs/contentId"
+        },
+        "hard_gate": {
+          "type": "boolean"
+        },
+        "evidence_class": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}
