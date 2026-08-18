@@ -1,0 +1,83 @@
+{
+  "schema_version": "mncs-lineage/succession-contract/0.1",
+  "parent_generation": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+  "candidate_recipe": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+  "target_claims": [
+    {
+      "claim_id": "hidden-transfer.planning-score",
+      "kind": "target",
+      "requirement": {
+        "operator": "gte-parent-margin",
+        "margin": 0.03
+      },
+      "verifier": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+      "hard_gate": true,
+      "evidence_class": "hidden-transfer-evaluation"
+    }
+  ],
+  "protected_claims": [
+    {
+      "claim_id": "critical-regression-suite",
+      "kind": "protected",
+      "requirement": {
+        "operator": "pass"
+      },
+      "verifier": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+      "hard_gate": true,
+      "evidence_class": "deterministic-regression-suite"
+    },
+    {
+      "claim_id": "tool-authority-not-broadened",
+      "kind": "protected",
+      "requirement": {
+        "operator": "pass"
+      },
+      "verifier": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+      "hard_gate": true,
+      "evidence_class": "capability-delta-verification"
+    }
+  ],
+  "development_envelope": {
+    "max_candidates": 4,
+    "max_development_steps": 10000,
+    "mutation_scope": [
+      "planner.module",
+      "planner.initialization",
+      "development.curriculum"
+    ],
+    "allowed_capabilities": [
+      "read-development-evidence",
+      "write-isolated-candidate",
+      "invoke-bounded-training"
+    ],
+    "visibility": [
+      "development-visible",
+      "selection-observed"
+    ]
+  },
+  "inheritance_manifest": null,
+  "evidence_policy": {
+    "allowed_statuses": [
+      "PASS",
+      "FAIL",
+      "UNKNOWN"
+    ],
+    "hidden_partitions_required": true,
+    "proposal_authority_may_self_certify": false
+  },
+  "promotion_policy": {
+    "all_target_claims_must_pass": true,
+    "all_protected_claims_must_pass": true,
+    "unknown_blocks_promotion": true,
+    "requires_distinct_promotion_authority": true
+  },
+  "rollback_policy": {
+    "required": true,
+    "retain_parent_artifact": true,
+    "rollback_test_required": true
+  },
+  "notes": [
+    "Illustrative research contract only; content identifiers are placeholders.",
+    "The contract demonstrates semantics, not a final MNCS or MNCS Language format."
+  ]
+}
