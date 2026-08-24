@@ -1,5 +1,10 @@
 # Machine-Native Artifacts
 
+> **Status:** much of what this document describes as future direction now
+> exists in executable form under `language/` and `tools/`; start with
+> [LANGUAGE_IMPLEMENTATION.md](LANGUAGE_IMPLEMENTATION.md). This document
+> remains useful for intent and rationale.
+
 ## Goal
 
 Lineage should be operable from machine-readable semantic records rather than requiring an LLM to reinterpret prose at every generational transition.

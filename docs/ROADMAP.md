@@ -1,8 +1,18 @@
 # Roadmap
 
+> **Direction change (2026-08):** MNCS Language integration has been pulled
+> forward from Stage 8 to the current development front. Lineage is now an
+> active MNCS Language proving ground: the succession core is written in MNCS
+> Language, executes through the reference toolchain, and its requirements are
+> driving language, compiler, tooling, and service fixes. See
+> [LANGUAGE_IMPLEMENTATION.md](LANGUAGE_IMPLEMENTATION.md) for what runs
+> today and [MNCS_LANGUAGE_FINDINGS.md](MNCS_LANGUAGE_FINDINGS.md) for the
+> recorded impact on the language. The staged research plan below remains
+> valid; stages now *assume* native semantics rather than deferring them.
+
 Lineage should remain deliberately conservative until its abstractions can be tested with small, reproducible systems. The roadmap therefore starts with records and controlled experiments rather than autonomous replacement.
 
-## Stage 0 — Concept and vocabulary
+## Stage 0 — Concept and vocabulary — COMPLETE
 
 **Goal:** define what Lineage means before implementing it.
 
@@ -14,26 +24,35 @@ Lineage should remain deliberately conservative until its abstractions can be te
 
 **Exit condition:** the architecture can describe a multi-generation experiment without relying on ambiguous anthropomorphic language.
 
-## Stage 1 — Deterministic record model
+## Stage 1 — Deterministic record model — SUBSTANTIALLY COMPLETE IN MNCS LANGUAGE
 
 **Goal:** make succession auditable without training any model.
 
-Implement or prototype:
+Status against the original checklist:
 
-- canonical generation descriptors;
-- candidate descriptors;
-- succession-contract validation;
-- inheritance manifests;
-- frozen-candidate records;
-- evidence-manifest references;
-- promotion/rejection/unknown records;
-- rollback records;
-- lineage graph verification;
-- evidence invalidation when identity-bearing dependencies change.
+- canonical generation descriptors — done (freeze records, generation graph);
+- candidate descriptors — done (`frozen_candidate` identity bindings);
+- succession-contract validation — done (declared contract clauses validated
+  and evidence-gated by the compiler);
+- inheritance manifests — modeled as dependency tuples in the executable core;
+  full artifact manifests remain future work;
+- frozen-candidate records — done (`candidate-freeze-record.json`);
+- evidence-manifest references — done (dependency-fingerprinted evidence,
+  `evidence-check` invalidation);
+- promotion/rejection/unknown records — done at decision level
+  (`Disposition`, sealed experiment results); a dedicated promotion-control
+  record family is next;
+- rollback records — done (rollback targets in the generation graph; rollback
+  gates in the disposition rule);
+- lineage graph verification — done (`check_generation_graph`);
+- evidence invalidation on dependency change — done at both language level
+  (corpus cases) and artifact level (invalidation probe).
 
-No model should be able to promote itself in this stage.
+No model can promote itself: authority separation is enforced statically
+(`MNE134`), at decision level, and operationally.
 
-**Exit condition:** a synthetic lineage can be replayed and validated deterministically from records alone.
+**Exit condition:** met for the synthetic round - the lineage replays and
+validates deterministically from records alone (`--check`).
 
 ## Stage 2 — Single-transition reference experiment
 
@@ -156,25 +175,42 @@ The promotion policy and critical evaluation authority must remain outside the m
 
 **Exit condition:** a successor-production component can be replaced under the same evidence-governed semantics without redefining its own acceptance standard.
 
-## Stage 8 — MNCS Language integration
+## Stage 8 — MNCS Language integration — PULLED FORWARD; FIRST MILESTONE COMPLETE
 
-**Goal:** move from ad hoc research records toward native machine semantics when the language is ready.
+**Goal:** move from ad hoc research records toward native machine semantics. The language proved ready enough, and Lineage is now one of its primary proving grounds.
 
-Potential language-native concepts:
+Delivered in the first milestone (see [LANGUAGE_IMPLEMENTATION.md](LANGUAGE_IMPLEMENTATION.md)):
 
-- `successor` relationships;
-- protected-property contracts;
-- inheritance capabilities;
-- evidence-transfer rules;
-- promotion obligations;
-- rollback requirements;
-- semantic deltas;
-- machine-intent constraints;
-- proof/evidence-carrying candidate artifacts.
+- typed succession vocabulary as enums and records (`Verdict`, structured
+  `UnknownReason` with seven actionable reasons, `ClaimVerdict`,
+  `RollbackState`, `Disposition`);
+- succession contracts as compiler-validated clauses, evidence-gated before
+  anything seals PASS;
+- promotion eligibility, rejection, and structured UNKNOWN as executable
+  fail-closed decision rules;
+- authority separation enforced statically (`MNE134`), at decision level, and
+  operationally through Forge evaluator boundaries;
+- candidate identity freshness over the identity-bearing dependency tuple,
+  with evidence invalidation on change;
+- branching lineage representation (rejected / unknown / promoted siblings)
+  and a deterministically reconstructed G0->G1->G2 generation graph;
+- deterministic replay sealed across two backend realizations.
 
-The exact syntax should be designed in the language project. Lineage should contribute requirements and executable studies rather than invent a competing language.
+Language changes this milestone forced are recorded in
+[MNCS_LANGUAGE_FINDINGS.md](MNCS_LANGUAGE_FINDINGS.md): interleaved
+declarations, record-literal disambiguation, record values as execution
+observations, `.mncs` input to every semantic command.
 
-**Exit condition:** at least one Lineage contract can round-trip through a stable MNCS Language semantic representation without losing authority, evidence, or inheritance semantics.
+Still open in this stage:
+
+- cross-module imports so vocabulary is shared rather than mirrored (F12);
+- promotion-control record family as first-class language artifacts;
+- semantic deltas beyond dependency tuples;
+- source-level arithmetic intents for in-language hashing (F7).
+
+**Exit condition:** met - succession contracts round-trip source -> canonical
+semantic form -> frozen manifest -> freeze record without losing authority,
+evidence, identity, inheritance, or provenance semantics.
 
 ## Stage 9 — Fabric/Forge distributed evaluation
 

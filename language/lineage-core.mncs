@@ -1,0 +1,190 @@
+mncs 0.5;
+
+// MNCS Lineage — machine-native succession vocabulary.
+//
+// This module is the typed, executable heart of the Lineage semantic model:
+// first-class PASS / FAIL / UNKNOWN verdicts with structured unknown reasons,
+// identity-bound evidence freshness, and authority separation between the
+// actor that proposes or certifies a candidate and the authority that may
+// promote it.
+//
+// Proposal authority is not promotion authority: no function here lets an
+// actor certify a claim it proposed unless it independently holds evaluation
+// authority, and nothing in this module can change the active generation.
+module lineage.core.v1;
+
+enum Verdict { PASS, FAIL, UNKNOWN }
+
+enum UnknownReason {
+    NONE,
+    STALE_EVIDENCE,
+    MISSING_VERIFIER,
+    BUDGET_EXHAUSTED,
+    UNSUPPORTED_TARGET,
+    CONTAMINATED_PARTITION,
+    DEPENDENCY_CHANGED,
+    INSUFFICIENT_EVIDENCE,
+}
+
+record ClaimVerdict { status: Verdict, reason: UnknownReason }
+
+enum Disposition { PROMOTE, REJECT, HOLD_UNKNOWN }
+
+// A frozen evidence binding: the dependency epoch captured when the candidate
+// was frozen, the dependency epoch observed now, and the recorded claim
+// verdict. A mismatch of epochs means the evidence cannot be silently reused.
+record FrozenEvidence {
+    frozen_epoch: i32,
+    current_epoch: i32,
+    status: Verdict,
+    reason: UnknownReason,
+}
+
+fn unknown_reason_present(reason: UnknownReason) -> (present: bool)
+    ensures structured_unknown_reason_is_actionable
+{
+    return match reason {
+        NONE => false,
+        STALE_EVIDENCE => true,
+        MISSING_VERIFIER => true,
+        BUDGET_EXHAUSTED => true,
+        UNSUPPORTED_TARGET => true,
+        CONTAMINATED_PARTITION => true,
+        DEPENDENCY_CHANGED => true,
+        INSUFFICIENT_EVIDENCE => true,
+    };
+}
+
+fn reason_absent(reason: UnknownReason) -> (absent: bool)
+    ensures pass_and_fail_carry_no_unknown_reason
+{
+    return match reason {
+        NONE => true,
+        STALE_EVIDENCE => false,
+        MISSING_VERIFIER => false,
+        BUDGET_EXHAUSTED => false,
+        UNSUPPORTED_TARGET => false,
+        CONTAMINATED_PARTITION => false,
+        DEPENDENCY_CHANGED => false,
+        INSUFFICIENT_EVIDENCE => false,
+    };
+}
+
+// A verdict record is well formed only when UNKNOWN carries a structured
+// reason and PASS / FAIL carry NONE. An ill-formed verdict is unusable as
+// evidence.
+fn claim_verdict_well_formed(claim: ClaimVerdict) -> (result: bool)
+    ensures verdict_records_pair_status_and_reason
+{
+    return match claim.status {
+        PASS => reason_absent(claim.reason),
+        FAIL => reason_absent(claim.reason),
+        UNKNOWN => unknown_reason_present(claim.reason),
+    };
+}
+
+// Evidence reclassification against a moved dependency identity. If the
+// identity-bearing dependency changed after the freeze, the old observation is
+// downgraded to UNKNOWN(DEPENDENCY_CHANGED); it can never silently remain a
+// PASS.
+fn evidence_stays_valid(evidence: FrozenEvidence) -> (result: ClaimVerdict)
+    requires frozen_epoch_recorded
+    ensures changed_dependency_forces_reevaluation
+{
+    let mismatched: bool = evidence.frozen_epoch == evidence.current_epoch;
+    if mismatched {
+        return ClaimVerdict { status: evidence.status, reason: evidence.reason };
+    }
+    return ClaimVerdict { status: Verdict.UNKNOWN, reason: UnknownReason.DEPENDENCY_CHANGED };
+}
+
+enum AuthorityRole { PROPOSER, EVALUATOR, PROMOTER }
+
+// The promotion authority must be independent of the succession path it
+// judges: an actor that proposed the candidate, or that produced the evidence
+// being relied upon, may not also hold promotion authority over it.
+fn promotion_authority_independent(
+    promoter_also_proposed: bool,
+    promoter_also_certified: bool,
+) -> (independent: bool)
+    ensures proposal_authority_is_not_promotion_authority
+{
+    if promoter_also_proposed {
+        return false;
+    }
+    if promoter_also_certified {
+        return false;
+    }
+    return true;
+}
+
+enum RollbackState { READY, ARTIFACT_MISSING, ROLLBACK_TEST_FAILED }
+
+// Promotion-eligibility for one candidate under a hard-gated succession
+// contract, using flattened verdict inputs so the decision core realizes on
+// every backend. Ordering is fail-closed: FAIL dominates UNKNOWN, which
+// dominates gates, which dominate promotion.
+fn candidate_disposition(
+    target: Verdict,
+    protected_regression: Verdict,
+    authority_delta: Verdict,
+    rollback: RollbackState,
+) -> (decision: Disposition)
+    requires all_hard_claims_declared
+    ensures protected_regression_blocks_promotion
+    ensures unknown_blocks_promotion
+{
+    let target_failed: bool = match target {
+        FAIL => true,
+        PASS => false,
+        UNKNOWN => false,
+    };
+    let protected_failed: bool = match protected_regression {
+        FAIL => true,
+        PASS => false,
+        UNKNOWN => false,
+    };
+    let authority_failed: bool = match authority_delta {
+        FAIL => true,
+        PASS => false,
+        UNKNOWN => false,
+    };
+    if target_failed {
+        return Disposition.REJECT;
+    }
+    if protected_failed {
+        return Disposition.REJECT;
+    }
+    if authority_failed {
+        return Disposition.REJECT;
+    }
+    let target_uncertain: bool = match target {
+        UNKNOWN => true,
+        PASS => false,
+        FAIL => false,
+    };
+    let protected_uncertain: bool = match protected_regression {
+        UNKNOWN => true,
+        PASS => false,
+        FAIL => false,
+    };
+    let authority_uncertain: bool = match authority_delta {
+        UNKNOWN => true,
+        PASS => false,
+        FAIL => false,
+    };
+    if target_uncertain {
+        return Disposition.HOLD_UNKNOWN;
+    }
+    if protected_uncertain {
+        return Disposition.HOLD_UNKNOWN;
+    }
+    if authority_uncertain {
+        return Disposition.HOLD_UNKNOWN;
+    }
+    return match rollback {
+        READY => Disposition.PROMOTE,
+        ARTIFACT_MISSING => Disposition.REJECT,
+        ROLLBACK_TEST_FAILED => Disposition.REJECT,
+    };
+}
