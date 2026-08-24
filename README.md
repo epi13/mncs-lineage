@@ -41,7 +41,7 @@ new active generation
 
 The enduring object is therefore not necessarily one model instance. It is the **lineage**: the succession contracts, candidate identities, inheritance records, evidence, promotion decisions, rollback points, and accumulated verified experience that connect generations.
 
-> **Project status:** concept/research seed. No autonomous model replacement, recursive self-improvement, weight generation, training runtime, or promotion authority is implemented. The repository currently defines vocabulary, boundaries, machine-readable artifact sketches, research questions, and staged experiments.
+> **Project status:** active MNCS Language implementation + research program. The succession core is now written in MNCS Language, executes deterministically through the reference toolchain on two backend realizations, and its requirements are driving fixes in the language, compiler, CLI, and language services. No autonomous model replacement, recursive self-improvement, weight generation, training runtime, or promotion authority exists. See [docs/LANGUAGE_IMPLEMENTATION.md](docs/LANGUAGE_IMPLEMENTATION.md) for what runs today and [docs/MNCS_LANGUAGE_FINDINGS.md](docs/MNCS_LANGUAGE_FINDINGS.md) for what the conversion taught us about the language.
 
 ## Why this project exists
 
@@ -174,6 +174,25 @@ Exact interfaces are future work and should remain explicit rather than implemen
 ## Repository map
 
 ```text
+language/
+  lineage-core.mncs           Executable succession vocabulary: verdicts,
+                              structured UNKNOWN reasons, evidence freshness,
+                              authority independence
+  synthetic-lineage-g0.mncs   Deterministic G0 -> G1 succession experiment:
+                              identity freshness, fail-closed dispositions,
+                              branching selection policy
+  negative/                   Modules that MUST be rejected (authority gates)
+  variants/                   Deliberate policy-change successor used by the
+                              evidence-invalidation probe
+examples/execution/
+  synthetic-lineage-g0-corpus.json  Sealed 24-case deterministic corpus
+tools/
+  build_lineage_artifacts.py  Deterministic freeze/experiment/graph builder
+  invalidate_evidence_probe.py Evidence invalidation demonstration
+  mncs_lineage_forge_provider.py Forge Provider Protocol 0.1 adapter
+mncs-forge.toml               Forge workflows and evaluator boundaries
+tests/                        pytest suite over the real toolchain
+artifacts/                    Generated frozen records (not committed)
 docs/
   CONCEPT.md                  Research hypothesis and system boundaries
   TERMINOLOGY.md              Stable vocabulary for generational artifacts
@@ -182,12 +201,33 @@ docs/
   MACHINE_NATIVE_ARTIFACTS.md Machine-readable artifact direction
   MNEL_INTEGRATION.md         Lifetime-learning / generational-learning boundary
   RESEARCH_QUESTIONS.md       Open questions and falsifiable hypotheses
-  ROADMAP.md                  Staged research path
+  ROADMAP.md                  Staged research path (Stage 8 pulled forward)
+  LANGUAGE_IMPLEMENTATION.md  What is executable and how to run it
+  MNCS_LANGUAGE_FINDINGS.md   Language/compiler/services discoveries record
 schemas/
   succession-contract.schema.json
 examples/
   succession-contract.example.json
 ```
+
+## Running the synthetic lineage experiment
+
+With `mncs-language` checked out next to this repository:
+
+```bash
+# build frozen artifacts, run sealed experiments on both reference backends,
+# reconstruct the G0 -> G1 -> G2 generation graph
+python3 tools/build_lineage_artifacts.py --check   # --check also re-verifies replay determinism
+
+# demonstrate that changed dependencies invalidate evidence
+python3 tools/invalidate_evidence_probe.py
+
+# full test suite
+python3 -m pytest tests/
+```
+
+Details, outputs, and the evidence lifecycle are described in
+[LANGUAGE_IMPLEMENTATION.md](docs/LANGUAGE_IMPLEMENTATION.md).
 
 ## Design principles
 

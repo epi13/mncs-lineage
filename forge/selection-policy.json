@@ -1,0 +1,7 @@
+{
+  "schema_version": "0.1",
+  "required_workflows": [
+    "mncs-lineage-development"
+  ],
+  "objective": "development evidence only; proposal authority is not promotion authority"
+}

@@ -1,0 +1,137 @@
+version = 1
+environment_allowlist = ["PATH", "LANG", "LC_ALL", "CARGO_HOME", "RUSTUP_HOME", "MNCS_BIN", "PYTHONHASHSEED"]
+
+[project]
+name = "MNCS Lineage succession semantics"
+identity = "mncs-lineage-succession-v1"
+root = "."
+
+[paths]
+candidates = ["forge/candidate", "artifacts/lineage/invalidation-probe"]
+generated = ["artifacts"]
+contracts = ["language", "examples", "schemas", "tools"]
+references = ["docs", "README.md"]
+evaluators = []
+acceptance_policies = []
+development_evidence = ["artifacts/lineage/synthetic-lineage-g0/candidate-freeze-record.json"]
+protected = ["language/negative/g0-proposer-self-certification.mncs"]
+outputs = ["artifacts"]
+
+[limits]
+timeout_seconds = 1200
+output_bytes = 4194304
+
+[verifier_limits]
+max_batch = 8
+request_bytes = 65536
+batch_timeout_seconds = 1200
+witness_bytes = 32768
+stderr_bytes = 4096
+result_bytes = 131072
+max_changed_paths = 32
+max_dependency_identities = 64
+max_question_parameters = 16
+
+# Lineage keeps the family authority boundary explicit: development tooling
+# may rebuild artifacts, but evaluation reads frozen identities only. No
+# component here holds promotion authority.
+[authority.development]
+may_write_candidates = true
+may_write_generated = true
+may_run_providers = true
+
+[authority.evaluator]
+candidate_read_only = true
+authority_read_only = true
+require_frozen_identities = true
+withhold_repair_feedback = true
+
+[policies]
+selection = "forge/selection-policy.json"
+useful_benefit_objective = "README.md"
+
+[[providers]]
+id = "mncs-lineage-provider"
+name = "MNCS Lineage bounded succession provider"
+identity = "mncs-lineage-provider-v1"
+version = "0.1"
+command = ["python3", "tools/mncs_lineage_forge_provider.py"]
+transport = "stdio-jsonl"
+required = true
+capabilities = [
+  "mncs-lineage-source-validation",
+  "mncs-lineage-succession-experiment",
+  "mncs-lineage-evidence-invalidation",
+  "mncs-lineage-determinism",
+  "inspection",
+  "evidence_derivation",
+  "differential_behavior",
+  "checkpoint_recovery",
+]
+supported_constructs = [
+  "lineage-succession-modules",
+  "deterministic-corpora",
+  "candidate-freeze-records",
+  "evidence-invalidation-probe",
+  "generation-graph-reconstruction",
+]
+unsupported_constructs = ["neural-training", "sandboxed-execution", "promotion-authority"]
+
+[[workflows]]
+name = "mncs-lineage-inspect"
+category = "inspection"
+mode = "development"
+command = ["python3", "tools/mncs_lineage_forge_provider.py"]
+provider_protocol = true
+provider_id = "mncs-lineage-provider"
+disclosure = "compact"
+
+[[workflows]]
+name = "mncs-lineage-evidence-derivation"
+category = "evidence_derivation"
+mode = "development"
+command = ["python3", "tools/mncs_lineage_forge_provider.py"]
+provider_protocol = true
+provider_id = "mncs-lineage-provider"
+disclosure = "compact"
+
+[[workflows]]
+name = "mncs-lineage-differential-behavior"
+category = "differential_behavior"
+mode = "both"
+command = ["python3", "tools/mncs_lineage_forge_provider.py"]
+provider_protocol = true
+provider_id = "mncs-lineage-provider"
+disclosure = "compact"
+
+[[workflows]]
+name = "mncs-lineage-replication"
+category = "checkpoint_recovery"
+mode = "development"
+command = ["python3", "tools/mncs_lineage_forge_provider.py"]
+provider_protocol = true
+provider_id = "mncs-lineage-provider"
+disclosure = "compact"
+
+[[verifiers]]
+id = "lineage-evidence-freshness-verifier"
+version = "0.1"
+workflow = "mncs-lineage-differential-behavior"
+provider = "mncs-lineage-provider"
+method = "differential_behavior"
+claim = "stale evidence is detected against a changed successor artifact and cannot be silently reused"
+category = "differential_behavior"
+modes = ["evaluator"]
+scopes = ["artifact", "evidence"]
+input_kinds = ["prior_artifact_identity", "candidate_identity"]
+cost = "medium"
+timeout_seconds = 1200
+disclosure = "compact"
+limitations = [
+  "single frozen scenario corpus",
+  "no sandbox; ordinary local processes",
+]
+assumptions = [
+  "the parent evidence manifest was exported from artifacts built in this checkout",
+]
+tags = ["lineage", "evidence-freshness", "succession"]

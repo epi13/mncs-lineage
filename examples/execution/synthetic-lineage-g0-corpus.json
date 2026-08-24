@@ -1,0 +1,1326 @@
+{
+  "schema_version": "0.1",
+  "name": "synthetic-lineage-g0-succession-v1",
+  "cases": [
+    {
+      "id": "identity-all-components-agree",
+      "request": {
+        "schema_version": "0.1",
+        "target": {
+          "module": "lineage.synthetic.g0.v1",
+          "function": "dependencies_unchanged"
+        },
+        "arguments": [
+          {
+            "integer": {
+              "value": 7,
+              "type": {
+                "bits": 64,
+                "signed": true
+              }
+            }
+          },
+          {
+            "integer": {
+              "value": 7,
+              "type": {
+                "bits": 64,
+                "signed": true
+              }
+            }
+          },
+          {
+            "integer": {
+              "value": 11,
+              "type": {
+                "bits": 64,
+                "signed": true
+              }
+            }
+          },
+          {
+            "integer": {
+              "value": 11,
+              "type": {
+                "bits": 64,
+                "signed": true
+              }
+            }
+          },
+          {
+            "integer": {
+              "value": 13,
+              "type": {
+                "bits": 64,
+                "signed": true
+              }
+            }
+          },
+          {
+            "integer": {
+              "value": 13,
+              "type": {
+                "bits": 64,
+                "signed": true
+              }
+            }
+          },
+          {
+            "integer": {
+              "value": 17,
+              "type": {
+                "bits": 64,
+                "signed": true
+              }
+            }
+          },
+          {
+            "integer": {
+              "value": 17,
+              "type": {
+                "bits": 64,
+                "signed": true
+              }
+            }
+          }
+        ],
+        "step_budget": 512
+      },
+      "expected_status": "returned",
+      "maximum_steps": 20000,
+      "prohibit_unexpected_effects": true,
+      "expected": [
+        {
+          "boolean": {
+            "value": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "identity-parent-moved",
+      "request": {
+        "schema_version": "0.1",
+        "target": {
+          "module": "lineage.synthetic.g0.v1",
+          "function": "dependencies_unchanged"
+        },
+        "arguments": [
+          {
+            "integer": {
+              "value": 7,
+              "type": {
+                "bits": 64,
+                "signed": true
+              }
+            }
+          },
+          {
+            "integer": {
+              "value": 8,
+              "type": {
+                "bits": 64,
+                "signed": true
+              }
+            }
+          },
+          {
+            "integer": {
+              "value": 11,
+              "type": {
+                "bits": 64,
+                "signed": true
+              }
+            }
+          },
+          {
+            "integer": {
+              "value": 11,
+              "type": {
+                "bits": 64,
+                "signed": true
+              }
+            }
+          },
+          {
+            "integer": {
+              "value": 13,
+              "type": {
+                "bits": 64,
+                "signed": true
+              }
+            }
+          },
+          {
+            "integer": {
+              "value": 13,
+              "type": {
+                "bits": 64,
+                "signed": true
+              }
+            }
+          },
+          {
+            "integer": {
+              "value": 17,
+              "type": {
+                "bits": 64,
+                "signed": true
+              }
+            }
+          },
+          {
+            "integer": {
+              "value": 17,
+              "type": {
+                "bits": 64,
+                "signed": true
+              }
+            }
+          }
+        ],
+        "step_budget": 512
+      },
+      "expected_status": "returned",
+      "maximum_steps": 20000,
+      "prohibit_unexpected_effects": true,
+      "expected": [
+        {
+          "boolean": {
+            "value": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "identity-contract-moved",
+      "request": {
+        "schema_version": "0.1",
+        "target": {
+          "module": "lineage.synthetic.g0.v1",
+          "function": "dependencies_unchanged"
+        },
+        "arguments": [
+          {
+            "integer": {
+              "value": 7,
+              "type": {
+                "bits": 64,
+                "signed": true
+              }
+            }
+          },
+          {
+            "integer": {
+              "value": 7,
+              "type": {
+                "bits": 64,
+                "signed": true
+              }
+            }
+          },
+          {
+            "integer": {
+              "value": 11,
+              "type": {
+                "bits": 64,
+                "signed": true
+              }
+            }
+          },
+          {
+            "integer": {
+              "value": 12,
+              "type": {
+                "bits": 64,
+                "signed": true
+              }
+            }
+          },
+          {
+            "integer": {
+              "value": 13,
+              "type": {
+                "bits": 64,
+                "signed": true
+              }
+            }
+          },
+          {
+            "integer": {
+              "value": 13,
+              "type": {
+                "bits": 64,
+                "signed": true
+              }
+            }
+          },
+          {
+            "integer": {
+              "value": 17,
+              "type": {
+                "bits": 64,
+                "signed": true
+              }
+            }
+          },
+          {
+            "integer": {
+              "value": 17,
+              "type": {
+                "bits": 64,
+                "signed": true
+              }
+            }
+          }
+        ],
+        "step_budget": 512
+      },
+      "expected_status": "returned",
+      "maximum_steps": 20000,
+      "prohibit_unexpected_effects": true,
+      "expected": [
+        {
+          "boolean": {
+            "value": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "identity-inheritance-moved",
+      "request": {
+        "schema_version": "0.1",
+        "target": {
+          "module": "lineage.synthetic.g0.v1",
+          "function": "dependencies_unchanged"
+        },
+        "arguments": [
+          {
+            "integer": {
+              "value": 7,
+              "type": {
+                "bits": 64,
+                "signed": true
+              }
+            }
+          },
+          {
+            "integer": {
+              "value": 7,
+              "type": {
+                "bits": 64,
+                "signed": true
+              }
+            }
+          },
+          {
+            "integer": {
+              "value": 11,
+              "type": {
+                "bits": 64,
+                "signed": true
+              }
+            }
+          },
+          {
+            "integer": {
+              "value": 11,
+              "type": {
+                "bits": 64,
+                "signed": true
+              }
+            }
+          },
+          {
+            "integer": {
+              "value": 13,
+              "type": {
+                "bits": 64,
+                "signed": true
+              }
+            }
+          },
+          {
+            "integer": {
+              "value": 14,
+              "type": {
+                "bits": 64,
+                "signed": true
+              }
+            }
+          },
+          {
+            "integer": {
+              "value": 17,
+              "type": {
+                "bits": 64,
+                "signed": true
+              }
+            }
+          },
+          {
+            "integer": {
+              "value": 17,
+              "type": {
+                "bits": 64,
+                "signed": true
+              }
+            }
+          }
+        ],
+        "step_budget": 512
+      },
+      "expected_status": "returned",
+      "maximum_steps": 20000,
+      "prohibit_unexpected_effects": true,
+      "expected": [
+        {
+          "boolean": {
+            "value": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "identity-recipe-moved",
+      "request": {
+        "schema_version": "0.1",
+        "target": {
+          "module": "lineage.synthetic.g0.v1",
+          "function": "dependencies_unchanged"
+        },
+        "arguments": [
+          {
+            "integer": {
+              "value": 7,
+              "type": {
+                "bits": 64,
+                "signed": true
+              }
+            }
+          },
+          {
+            "integer": {
+              "value": 7,
+              "type": {
+                "bits": 64,
+                "signed": true
+              }
+            }
+          },
+          {
+            "integer": {
+              "value": 11,
+              "type": {
+                "bits": 64,
+                "signed": true
+              }
+            }
+          },
+          {
+            "integer": {
+              "value": 11,
+              "type": {
+                "bits": 64,
+                "signed": true
+              }
+            }
+          },
+          {
+            "integer": {
+              "value": 13,
+              "type": {
+                "bits": 64,
+                "signed": true
+              }
+            }
+          },
+          {
+            "integer": {
+              "value": 13,
+              "type": {
+                "bits": 64,
+                "signed": true
+              }
+            }
+          },
+          {
+            "integer": {
+              "value": 17,
+              "type": {
+                "bits": 64,
+                "signed": true
+              }
+            }
+          },
+          {
+            "integer": {
+              "value": 18,
+              "type": {
+                "bits": 64,
+                "signed": true
+              }
+            }
+          }
+        ],
+        "step_budget": 512
+      },
+      "expected_status": "returned",
+      "maximum_steps": 20000,
+      "prohibit_unexpected_effects": true,
+      "expected": [
+        {
+          "boolean": {
+            "value": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "fresh-pass-evidence-usable",
+      "request": {
+        "schema_version": "0.1",
+        "target": {
+          "module": "lineage.synthetic.g0.v1",
+          "function": "effective_verdict"
+        },
+        "arguments": [
+          {
+            "finite": {
+              "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::Verdict",
+              "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::Verdict::PASS",
+              "discriminant": 0
+            }
+          },
+          {
+            "boolean": {
+              "value": true
+            }
+          }
+        ],
+        "step_budget": 512
+      },
+      "expected_status": "returned",
+      "maximum_steps": 20000,
+      "prohibit_unexpected_effects": true,
+      "expected": [
+        {
+          "finite": {
+            "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::Verdict",
+            "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::Verdict::PASS",
+            "discriminant": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "changed-dependency-invalidates-pass",
+      "request": {
+        "schema_version": "0.1",
+        "target": {
+          "module": "lineage.synthetic.g0.v1",
+          "function": "effective_verdict"
+        },
+        "arguments": [
+          {
+            "finite": {
+              "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::Verdict",
+              "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::Verdict::PASS",
+              "discriminant": 0
+            }
+          },
+          {
+            "boolean": {
+              "value": false
+            }
+          }
+        ],
+        "step_budget": 512
+      },
+      "expected_status": "returned",
+      "maximum_steps": 20000,
+      "prohibit_unexpected_effects": true,
+      "expected": [
+        {
+          "finite": {
+            "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::Verdict",
+            "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::Verdict::UNKNOWN",
+            "discriminant": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "changed-dependency-invalidates-fail-too",
+      "request": {
+        "schema_version": "0.1",
+        "target": {
+          "module": "lineage.synthetic.g0.v1",
+          "function": "effective_verdict"
+        },
+        "arguments": [
+          {
+            "finite": {
+              "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::Verdict",
+              "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::Verdict::FAIL",
+              "discriminant": 1
+            }
+          },
+          {
+            "boolean": {
+              "value": false
+            }
+          }
+        ],
+        "step_budget": 512
+      },
+      "expected_status": "returned",
+      "maximum_steps": 20000,
+      "prohibit_unexpected_effects": true,
+      "expected": [
+        {
+          "finite": {
+            "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::Verdict",
+            "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::Verdict::UNKNOWN",
+            "discriminant": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "stale-reason-is-dependency-changed",
+      "request": {
+        "schema_version": "0.1",
+        "target": {
+          "module": "lineage.synthetic.g0.v1",
+          "function": "staleness_reason"
+        },
+        "arguments": [
+          {
+            "boolean": {
+              "value": false
+            }
+          }
+        ],
+        "step_budget": 512
+      },
+      "expected_status": "returned",
+      "maximum_steps": 20000,
+      "prohibit_unexpected_effects": true,
+      "expected": [
+        {
+          "finite": {
+            "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::UnknownReason",
+            "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::UnknownReason::DEPENDENCY_CHANGED",
+            "discriminant": 6
+          }
+        }
+      ]
+    },
+    {
+      "id": "current-reason-is-none",
+      "request": {
+        "schema_version": "0.1",
+        "target": {
+          "module": "lineage.synthetic.g0.v1",
+          "function": "staleness_reason"
+        },
+        "arguments": [
+          {
+            "boolean": {
+              "value": true
+            }
+          }
+        ],
+        "step_budget": 512
+      },
+      "expected_status": "returned",
+      "maximum_steps": 20000,
+      "prohibit_unexpected_effects": true,
+      "expected": [
+        {
+          "finite": {
+            "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::UnknownReason",
+            "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::UnknownReason::NONE",
+            "discriminant": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "c3-all-pass-with-rollback-promotes",
+      "request": {
+        "schema_version": "0.1",
+        "target": {
+          "module": "lineage.synthetic.g0.v1",
+          "function": "candidate_disposition"
+        },
+        "arguments": [
+          {
+            "finite": {
+              "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::Verdict",
+              "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::Verdict::PASS",
+              "discriminant": 0
+            }
+          },
+          {
+            "finite": {
+              "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::Verdict",
+              "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::Verdict::PASS",
+              "discriminant": 0
+            }
+          },
+          {
+            "finite": {
+              "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::Verdict",
+              "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::Verdict::PASS",
+              "discriminant": 0
+            }
+          },
+          {
+            "finite": {
+              "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::RollbackState",
+              "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::RollbackState::READY",
+              "discriminant": 0
+            }
+          }
+        ],
+        "step_budget": 512
+      },
+      "expected_status": "returned",
+      "maximum_steps": 20000,
+      "prohibit_unexpected_effects": true,
+      "expected": [
+        {
+          "finite": {
+            "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::Disposition",
+            "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::Disposition::PROMOTE",
+            "discriminant": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "c1-target-improves-but-protected-regresses",
+      "request": {
+        "schema_version": "0.1",
+        "target": {
+          "module": "lineage.synthetic.g0.v1",
+          "function": "candidate_disposition"
+        },
+        "arguments": [
+          {
+            "finite": {
+              "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::Verdict",
+              "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::Verdict::PASS",
+              "discriminant": 0
+            }
+          },
+          {
+            "finite": {
+              "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::Verdict",
+              "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::Verdict::FAIL",
+              "discriminant": 1
+            }
+          },
+          {
+            "finite": {
+              "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::Verdict",
+              "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::Verdict::PASS",
+              "discriminant": 0
+            }
+          },
+          {
+            "finite": {
+              "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::RollbackState",
+              "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::RollbackState::READY",
+              "discriminant": 0
+            }
+          }
+        ],
+        "step_budget": 512
+      },
+      "expected_status": "returned",
+      "maximum_steps": 20000,
+      "prohibit_unexpected_effects": true,
+      "expected": [
+        {
+          "finite": {
+            "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::Disposition",
+            "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::Disposition::REJECT",
+            "discriminant": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "authority-broadening-rejected",
+      "request": {
+        "schema_version": "0.1",
+        "target": {
+          "module": "lineage.synthetic.g0.v1",
+          "function": "candidate_disposition"
+        },
+        "arguments": [
+          {
+            "finite": {
+              "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::Verdict",
+              "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::Verdict::PASS",
+              "discriminant": 0
+            }
+          },
+          {
+            "finite": {
+              "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::Verdict",
+              "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::Verdict::PASS",
+              "discriminant": 0
+            }
+          },
+          {
+            "finite": {
+              "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::Verdict",
+              "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::Verdict::FAIL",
+              "discriminant": 1
+            }
+          },
+          {
+            "finite": {
+              "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::RollbackState",
+              "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::RollbackState::READY",
+              "discriminant": 0
+            }
+          }
+        ],
+        "step_budget": 512
+      },
+      "expected_status": "returned",
+      "maximum_steps": 20000,
+      "prohibit_unexpected_effects": true,
+      "expected": [
+        {
+          "finite": {
+            "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::Disposition",
+            "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::Disposition::REJECT",
+            "discriminant": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "target-failure-rejected",
+      "request": {
+        "schema_version": "0.1",
+        "target": {
+          "module": "lineage.synthetic.g0.v1",
+          "function": "candidate_disposition"
+        },
+        "arguments": [
+          {
+            "finite": {
+              "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::Verdict",
+              "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::Verdict::FAIL",
+              "discriminant": 1
+            }
+          },
+          {
+            "finite": {
+              "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::Verdict",
+              "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::Verdict::PASS",
+              "discriminant": 0
+            }
+          },
+          {
+            "finite": {
+              "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::Verdict",
+              "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::Verdict::PASS",
+              "discriminant": 0
+            }
+          },
+          {
+            "finite": {
+              "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::RollbackState",
+              "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::RollbackState::READY",
+              "discriminant": 0
+            }
+          }
+        ],
+        "step_budget": 512
+      },
+      "expected_status": "returned",
+      "maximum_steps": 20000,
+      "prohibit_unexpected_effects": true,
+      "expected": [
+        {
+          "finite": {
+            "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::Disposition",
+            "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::Disposition::REJECT",
+            "discriminant": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "unknown-target-holds",
+      "request": {
+        "schema_version": "0.1",
+        "target": {
+          "module": "lineage.synthetic.g0.v1",
+          "function": "candidate_disposition"
+        },
+        "arguments": [
+          {
+            "finite": {
+              "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::Verdict",
+              "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::Verdict::UNKNOWN",
+              "discriminant": 2
+            }
+          },
+          {
+            "finite": {
+              "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::Verdict",
+              "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::Verdict::PASS",
+              "discriminant": 0
+            }
+          },
+          {
+            "finite": {
+              "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::Verdict",
+              "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::Verdict::PASS",
+              "discriminant": 0
+            }
+          },
+          {
+            "finite": {
+              "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::RollbackState",
+              "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::RollbackState::READY",
+              "discriminant": 0
+            }
+          }
+        ],
+        "step_budget": 512
+      },
+      "expected_status": "returned",
+      "maximum_steps": 20000,
+      "prohibit_unexpected_effects": true,
+      "expected": [
+        {
+          "finite": {
+            "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::Disposition",
+            "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::Disposition::HOLD_UNKNOWN",
+            "discriminant": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "rollback-artifact-missing-blocks-promotion",
+      "request": {
+        "schema_version": "0.1",
+        "target": {
+          "module": "lineage.synthetic.g0.v1",
+          "function": "candidate_disposition"
+        },
+        "arguments": [
+          {
+            "finite": {
+              "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::Verdict",
+              "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::Verdict::PASS",
+              "discriminant": 0
+            }
+          },
+          {
+            "finite": {
+              "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::Verdict",
+              "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::Verdict::PASS",
+              "discriminant": 0
+            }
+          },
+          {
+            "finite": {
+              "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::Verdict",
+              "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::Verdict::PASS",
+              "discriminant": 0
+            }
+          },
+          {
+            "finite": {
+              "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::RollbackState",
+              "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::RollbackState::ARTIFACT_MISSING",
+              "discriminant": 1
+            }
+          }
+        ],
+        "step_budget": 512
+      },
+      "expected_status": "returned",
+      "maximum_steps": 20000,
+      "prohibit_unexpected_effects": true,
+      "expected": [
+        {
+          "finite": {
+            "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::Disposition",
+            "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::Disposition::REJECT",
+            "discriminant": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "rollback-test-failed-blocks-promotion",
+      "request": {
+        "schema_version": "0.1",
+        "target": {
+          "module": "lineage.synthetic.g0.v1",
+          "function": "candidate_disposition"
+        },
+        "arguments": [
+          {
+            "finite": {
+              "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::Verdict",
+              "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::Verdict::PASS",
+              "discriminant": 0
+            }
+          },
+          {
+            "finite": {
+              "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::Verdict",
+              "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::Verdict::PASS",
+              "discriminant": 0
+            }
+          },
+          {
+            "finite": {
+              "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::Verdict",
+              "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::Verdict::PASS",
+              "discriminant": 0
+            }
+          },
+          {
+            "finite": {
+              "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::RollbackState",
+              "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::RollbackState::ROLLBACK_TEST_FAILED",
+              "discriminant": 2
+            }
+          }
+        ],
+        "step_budget": 512
+      },
+      "expected_status": "returned",
+      "maximum_steps": 20000,
+      "prohibit_unexpected_effects": true,
+      "expected": [
+        {
+          "finite": {
+            "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::Disposition",
+            "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::Disposition::REJECT",
+            "discriminant": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "independent-promoter-accepted",
+      "request": {
+        "schema_version": "0.1",
+        "target": {
+          "module": "lineage.synthetic.g0.v1",
+          "function": "promotion_authority_independent"
+        },
+        "arguments": [
+          {
+            "boolean": {
+              "value": false
+            }
+          },
+          {
+            "boolean": {
+              "value": false
+            }
+          }
+        ],
+        "step_budget": 512
+      },
+      "expected_status": "returned",
+      "maximum_steps": 20000,
+      "prohibit_unexpected_effects": true,
+      "expected": [
+        {
+          "boolean": {
+            "value": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "promoter-that-proposed-rejected",
+      "request": {
+        "schema_version": "0.1",
+        "target": {
+          "module": "lineage.synthetic.g0.v1",
+          "function": "promotion_authority_independent"
+        },
+        "arguments": [
+          {
+            "boolean": {
+              "value": true
+            }
+          },
+          {
+            "boolean": {
+              "value": false
+            }
+          }
+        ],
+        "step_budget": 512
+      },
+      "expected_status": "returned",
+      "maximum_steps": 20000,
+      "prohibit_unexpected_effects": true,
+      "expected": [
+        {
+          "boolean": {
+            "value": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "promoter-that-certified-rejected",
+      "request": {
+        "schema_version": "0.1",
+        "target": {
+          "module": "lineage.synthetic.g0.v1",
+          "function": "promotion_authority_independent"
+        },
+        "arguments": [
+          {
+            "boolean": {
+              "value": false
+            }
+          },
+          {
+            "boolean": {
+              "value": true
+            }
+          }
+        ],
+        "step_budget": 512
+      },
+      "expected_status": "returned",
+      "maximum_steps": 20000,
+      "prohibit_unexpected_effects": true,
+      "expected": [
+        {
+          "boolean": {
+            "value": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "topology-canonical-g0",
+      "request": {
+        "schema_version": "0.1",
+        "target": {
+          "module": "lineage.synthetic.g0.v1",
+          "function": "select_successor"
+        },
+        "arguments": [
+          {
+            "finite": {
+              "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::Disposition",
+              "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::Disposition::REJECT",
+              "discriminant": 1
+            }
+          },
+          {
+            "finite": {
+              "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::Disposition",
+              "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::Disposition::HOLD_UNKNOWN",
+              "discriminant": 2
+            }
+          },
+          {
+            "finite": {
+              "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::Disposition",
+              "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::Disposition::PROMOTE",
+              "discriminant": 0
+            }
+          },
+          {
+            "boolean": {
+              "value": true
+            }
+          }
+        ],
+        "step_budget": 512
+      },
+      "expected_status": "returned",
+      "maximum_steps": 20000,
+      "prohibit_unexpected_effects": true,
+      "expected": [
+        {
+          "finite": {
+            "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::CandidateSlot",
+            "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::CandidateSlot::C3",
+            "discriminant": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "self-certification-admits-nobody",
+      "request": {
+        "schema_version": "0.1",
+        "target": {
+          "module": "lineage.synthetic.g0.v1",
+          "function": "select_successor"
+        },
+        "arguments": [
+          {
+            "finite": {
+              "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::Disposition",
+              "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::Disposition::REJECT",
+              "discriminant": 1
+            }
+          },
+          {
+            "finite": {
+              "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::Disposition",
+              "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::Disposition::HOLD_UNKNOWN",
+              "discriminant": 2
+            }
+          },
+          {
+            "finite": {
+              "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::Disposition",
+              "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::Disposition::PROMOTE",
+              "discriminant": 0
+            }
+          },
+          {
+            "boolean": {
+              "value": false
+            }
+          }
+        ],
+        "step_budget": 512
+      },
+      "expected_status": "returned",
+      "maximum_steps": 20000,
+      "prohibit_unexpected_effects": true,
+      "expected": [
+        {
+          "finite": {
+            "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::CandidateSlot",
+            "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::CandidateSlot::NO_CANDIDATE",
+            "discriminant": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "multiple-eligible-takes-lowest-slot",
+      "request": {
+        "schema_version": "0.1",
+        "target": {
+          "module": "lineage.synthetic.g0.v1",
+          "function": "select_successor"
+        },
+        "arguments": [
+          {
+            "finite": {
+              "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::Disposition",
+              "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::Disposition::PROMOTE",
+              "discriminant": 0
+            }
+          },
+          {
+            "finite": {
+              "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::Disposition",
+              "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::Disposition::PROMOTE",
+              "discriminant": 0
+            }
+          },
+          {
+            "finite": {
+              "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::Disposition",
+              "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::Disposition::PROMOTE",
+              "discriminant": 0
+            }
+          },
+          {
+            "boolean": {
+              "value": true
+            }
+          }
+        ],
+        "step_budget": 512
+      },
+      "expected_status": "returned",
+      "maximum_steps": 20000,
+      "prohibit_unexpected_effects": true,
+      "expected": [
+        {
+          "finite": {
+            "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::CandidateSlot",
+            "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::CandidateSlot::C1",
+            "discriminant": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "no-eligible-candidate",
+      "request": {
+        "schema_version": "0.1",
+        "target": {
+          "module": "lineage.synthetic.g0.v1",
+          "function": "select_successor"
+        },
+        "arguments": [
+          {
+            "finite": {
+              "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::Disposition",
+              "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::Disposition::HOLD_UNKNOWN",
+              "discriminant": 2
+            }
+          },
+          {
+            "finite": {
+              "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::Disposition",
+              "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::Disposition::HOLD_UNKNOWN",
+              "discriminant": 2
+            }
+          },
+          {
+            "finite": {
+              "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::Disposition",
+              "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::Disposition::HOLD_UNKNOWN",
+              "discriminant": 2
+            }
+          },
+          {
+            "boolean": {
+              "value": true
+            }
+          }
+        ],
+        "step_budget": 512
+      },
+      "expected_status": "returned",
+      "maximum_steps": 20000,
+      "prohibit_unexpected_effects": true,
+      "expected": [
+        {
+          "finite": {
+            "type_identity": "mncs:0.2:finite-type:lineage.synthetic.g0.v1::CandidateSlot",
+            "variant_identity": "mncs:0.2:finite-variant:lineage.synthetic.g0.v1::CandidateSlot::NO_CANDIDATE",
+            "discriminant": 0
+          }
+        }
+      ]
+    }
+  ]
+}
