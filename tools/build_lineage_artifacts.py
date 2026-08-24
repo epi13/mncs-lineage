@@ -254,6 +254,32 @@ def build_target(cli: Mncs, target: dict, workdir: Path) -> dict:
             "discharged_contracts": newly_bound,
             "remaining_unresolved_obligations": unresolved,
         },
+        # Compatibility fixture for the MNEL boundary: an MNEL-style governed
+        # artifact may enter the inheritance manifest only as classified
+        # provenance. Its historical evidence class travels with it and never
+        # becomes succession evidence by itself; the successor must
+        # re-establish required claims under its own frozen identity.
+        "inheritance_manifest": [
+            {
+                "artifact_id": f"mncs-lineage:artifact:{target['name']}:g0-parent-state",
+                "artifact_kind": "parent-executable-state",
+                "source_generation": f"mncs-lineage:generation:{target['name']}:g0",
+                "transformation": {"kind": "identity", "transform_id": None},
+                "intended_role": "successor-baseline",
+                "evidence_class": "identity-bound",
+                "eligible_for_promotion_evidence": False,
+            },
+            {
+                "artifact_id": f"mnel-compat:negative-memory:{target['name']}:v1",
+                "artifact_kind": "negative-memory-bundle",
+                "source_generation": "mnel:study:compat-fixture:v1",
+                "transformation": {"kind": "eligibility-filter", "transform_id": None},
+                "intended_role": "development-guidance",
+                "evidence_class": "diagnostic-only",
+                "known_limitations": ["not-evaluated-on-hidden-transfer"],
+                "eligible_for_promotion_evidence": False,
+            },
+        ],
         "experiments": experiments,
         "cross_backend_comparison_sha256": (
             sha256_hex((target_dir / "cross-backend-comparison.json").read_bytes())

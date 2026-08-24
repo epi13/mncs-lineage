@@ -155,6 +155,24 @@ def test_generation_graph_reconstructs_g0_g1_g2():
     assert graph["unknown_candidates"][0]["unknown_reason"] == "DEPENDENCY_CHANGED"
 
 
+def test_mnel_style_inheritance_keeps_evidence_classification():
+    """MNEL-style artifacts enter inheritance as provenance, never as
+    promotion evidence; historical classes travel intact."""
+    workdir = REPO_ROOT / "artifacts" / "lineage"
+    record_path = workdir / "synthetic-lineage-g0" / "candidate-freeze-record.json"
+    if not record_path.exists():
+        builder.build_target(builder.Mncs(), builder.TARGETS[0], workdir)
+    record = json.loads(record_path.read_text())
+    entries = record["inheritance_manifest"]
+    by_id = {e["artifact_kind"]: e for e in entries}
+    negative = by_id["negative-memory-bundle"]
+    assert negative["evidence_class"] == "diagnostic-only"
+    assert negative["eligible_for_promotion_evidence"] is False
+    parent_state = by_id["parent-executable-state"]
+    # even the parent state is identity-bound, not self-certifying evidence
+    assert parent_state["eligible_for_promotion_evidence"] is False
+
+
 def test_replay_is_deterministic():
     """Rerunning the whole round reproduces identical freeze records."""
     proc = subprocess.run(

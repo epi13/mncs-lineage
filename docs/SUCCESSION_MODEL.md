@@ -1,5 +1,10 @@
 # Succession Model
 
+> **Status:** the lifecycle and authority rules described here are now
+> enforced by executable MNCS Language modules (`language/`) and sealed
+> corpora (`examples/execution/`). See
+> [LANGUAGE_IMPLEMENTATION.md](LANGUAGE_IMPLEMENTATION.md).
+
 ## Purpose
 
 The succession model defines how a potential next generation moves from proposal to active status without requiring the currently active system to modify itself in place or become the sole judge of its own replacement.
