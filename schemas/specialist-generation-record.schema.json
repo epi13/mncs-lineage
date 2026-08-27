@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/mncs-lineage/schemas/specialist-generation-record.schema.json",
+  "title": "MNCS Lineage Specialist Generation Record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "generation_id", "specialist_role", "status", "candidate", "succession", "inheritance", "evaluation", "rollback", "authority", "record_identity"],
+  "properties": {
+    "schema_version": {"const": "mncs-lineage/specialist-generation-record/0.1"},
+    "generation_id": {"$ref": "#/$defs/id"},
+    "parent_generation_id": {"anyOf": [{"$ref": "#/$defs/id"}, {"type": "null"}]},
+    "specialist_role": {"type": "string", "minLength": 1},
+    "status": {"enum": ["PROMOTED", "REJECTED", "HOLD_UNKNOWN"]},
+    "candidate": {"type": "object", "additionalProperties": true, "required": ["artifact_identity", "model_identity", "training_dataset_identity", "training_spec_identity", "checkpoint_identity", "calibration_identity", "operating_envelope_identity", "authority"], "properties": {"artifact_identity": {"$ref": "#/$defs/id"}, "model_identity": {"$ref": "#/$defs/id"}, "parent_model_identity": {"anyOf": [{"$ref": "#/$defs/id"}, {"type": "null"}]}, "training_dataset_identity": {"$ref": "#/$defs/id"}, "training_spec_identity": {"$ref": "#/$defs/id"}, "checkpoint_identity": {"$ref": "#/$defs/id"}, "calibration_identity": {"$ref": "#/$defs/id"}, "operating_envelope_identity": {"$ref": "#/$defs/id"}, "authority": {"const": "diagnostic-only"}}},
+    "succession": {"type": "object", "additionalProperties": true, "required": ["contract_identity", "proposer_identity", "evaluator_identity", "promotion_authority_identity", "authority_independent", "proposal_is_not_promotion_authority"], "properties": {"contract_identity": {"$ref": "#/$defs/id"}, "proposer_identity": {"type": "string", "minLength": 1}, "evaluator_identity": {"type": "string", "minLength": 1}, "promotion_authority_identity": {"type": "string", "minLength": 1}, "authority_independent": {"type": "boolean"}, "proposal_is_not_promotion_authority": {"const": true}}},
+    "inheritance": {"type": "object", "additionalProperties": true, "required": ["artifacts", "negative_memory", "historical_evidence_is_current"], "properties": {"artifacts": {"type": "array"}, "negative_memory": {"type": "array"}, "historical_evidence_is_current": {"const": false}}},
+    "evaluation": {"type": "object", "additionalProperties": true, "required": ["target_status", "protected_status", "reason", "evidence_epoch", "current_epoch", "evidence_reclassified"], "properties": {"target_status": {"enum": ["PASS", "FAIL", "UNKNOWN"]}, "protected_status": {"enum": ["PASS", "FAIL", "UNKNOWN"]}, "reason": {"type": "string"}, "evidence_epoch": {"type": "integer"}, "current_epoch": {"type": "integer"}, "evidence_reclassified": {"type": "boolean"}}},
+    "rollback": {"type": "object", "additionalProperties": true, "required": ["target_generation_id", "target_artifact_identity", "test_status", "required_before_promotion"], "properties": {"target_generation_id": {"anyOf": [{"$ref": "#/$defs/id"}, {"type": "null"}]}, "target_artifact_identity": {"anyOf": [{"$ref": "#/$defs/id"}, {"type": "null"}]}, "test_status": {"enum": ["READY", "MISSING", "FAILED"]}, "required_before_promotion": {"const": true}}},
+    "authority": {"const": "lineage-succession-authority"},
+    "semantics": {"type": "string", "minLength": 1},
+    "record_identity": {"$ref": "#/$defs/id"}
+  },
+  "$defs": {"id": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}}
+}

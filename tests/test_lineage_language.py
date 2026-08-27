@@ -9,7 +9,6 @@ via MNCS_BIN or a checkout of mncs-language next to this repository.
 from __future__ import annotations
 
 import json
-import os
 import subprocess
 import sys
 from pathlib import Path
@@ -17,7 +16,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT / "tools"))
 
-import build_lineage_artifacts as builder  # noqa: E402
+import build_lineage_artifacts as builder
 
 CORE_SOURCE = REPO_ROOT / "language" / "lineage-core.mncs"
 G0_SOURCE = REPO_ROOT / "language" / "synthetic-lineage-g0.mncs"
@@ -25,12 +24,14 @@ NEGATIVE_SELF_CERT = REPO_ROOT / "language" / "negative" / "g0-proposer-self-cer
 VARIANT_SOURCE = (
     REPO_ROOT / "language" / "variants" / "g0-rollback-holds-on-missing-artifact.mncs"
 )
+SPECIALIST_SOURCE = REPO_ROOT / "language" / "specialist-lineage.mncs"
+SPECIALIST_CORPUS = REPO_ROOT / "examples" / "execution" / "specialist-lineage-corpus.json"
 CORPUS = REPO_ROOT / "examples" / "execution" / "synthetic-lineage-g0-corpus.json"
 
 
 def run_mncs(args: list[str], expect_success: bool = True) -> dict:
     argv = builder.Mncs().argv(args)
-    proc = subprocess.run(argv, cwd=builder.language_root(), capture_output=True, text=True)
+    proc = subprocess.run(argv, cwd=builder.language_root(), capture_output=True, text=True, check=False)
     if expect_success and proc.returncode != 0:
         raise AssertionError(f"{args} failed ({proc.returncode}):\n{proc.stderr}")
     try:
@@ -45,10 +46,31 @@ def run_mncs(args: list[str], expect_success: bool = True) -> dict:
 
 
 def test_lineage_sources_validate_through_reference_front_end():
-    for source in (CORE_SOURCE, G0_SOURCE):
+    for source in (CORE_SOURCE, G0_SOURCE, SPECIALIST_SOURCE):
         report = run_mncs(["validate", builder.relative_to_language_root(source)])
         assert report["valid"] is True, report["errors"]
         assert report["errors"] == []
+
+
+def test_specialist_succession_semantics_execute_on_both_backends():
+    for backend in ("mncs-research-bytecode", "mncs-portable-wasm-mvp"):
+        result = run_mncs(
+            [
+                "experiment",
+                "run",
+                builder.relative_to_language_root(SPECIALIST_SOURCE),
+                "--backend",
+                backend,
+                "--corpus",
+                builder.relative_to_language_root(SPECIALIST_CORPUS),
+                "--output-dir",
+                f"/tmp/mncs-lineage-specialist-{backend.removeprefix('mncs-')}",
+            ]
+        )
+        assert all(case["expectation_met"] for case in result["cases"])
+        # The executable observations pass; contract evidence is intentionally
+        # not fabricated in this direct source experiment.
+        assert result["status"] in {"PASS", "UNKNOWN"}
 
 
 def test_module_names_follow_family_namespace_conventions():
@@ -83,6 +105,7 @@ def test_proposal_authority_cannot_self_certify():
         cwd=builder.language_root(),
         capture_output=True,
         text=True,
+        check=False,
     )
     assert proc.returncode != 0, "self-certification module must not validate"
     diagnostics = json.loads(proc.stdout)
@@ -179,6 +202,7 @@ def test_replay_is_deterministic():
         [sys.executable, str(REPO_ROOT / "tools" / "build_lineage_artifacts.py"), "--check"],
         capture_output=True,
         text=True,
+        check=False,
         cwd=REPO_ROOT,
     )
     assert proc.returncode == 0, proc.stdout + proc.stderr
@@ -211,6 +235,7 @@ def test_changed_policy_invalidates_parent_evidence():
         [sys.executable, str(REPO_ROOT / "tools" / "invalidate_evidence_probe.py")],
         capture_output=True,
         text=True,
+        check=False,
         cwd=REPO_ROOT,
     )
     assert proc.returncode == 0, proc.stdout + proc.stderr

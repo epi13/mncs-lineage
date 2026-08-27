@@ -27,6 +27,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from specialist_lineage import build_specialist_generation_record, digest
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
 # The verifier class that discharges contract-evidence obligations for this
@@ -80,6 +82,7 @@ class Mncs:
             cwd=cwd,
             capture_output=True,
             text=True,
+            check=False,
         )
         if proc.returncode != 0:
             raise SystemExit(
@@ -88,11 +91,13 @@ class Mncs:
         try:
             return json.loads(proc.stdout)
         except json.JSONDecodeError as error:
-            raise SystemExit(f"non-JSON output from {args}: {error}\n{proc.stdout[:400]}")
+            raise SystemExit(
+                f"non-JSON output from {args}: {error}\n{proc.stdout[:400]}"
+            )
 
     def run_quiet(self, args: list[str], cwd: Path) -> int:
         return subprocess.run(
-            self.argv(args), cwd=cwd, capture_output=True, text=True
+            self.argv(args), cwd=cwd, capture_output=True, text=True, check=False
         ).returncode
 
 
@@ -121,7 +126,10 @@ def compile_source(cli: Mncs, source: Path, out_dir: Path) -> dict:
         ],
         cwd=language_root(),
     )
-    if result.get("status") not in ("completed", "completed_with_unresolved_obligations"):
+    if result.get("status") not in (
+        "completed",
+        "completed_with_unresolved_obligations",
+    ):
         raise SystemExit(f"compilation failed for {source}: {result.get('status')}")
     return json.loads((out_dir / "semantic.json").read_text())
 
@@ -179,12 +187,18 @@ def build_target(cli: Mncs, target: dict, workdir: Path) -> dict:
 
     # 4. Validate the frozen artifact and confirm every contract-evidence
     #    obligation is discharged by the bound claims.
-    validation = cli.run(["validate", relative_to_language_root(manifest_path)], cwd=language_root())
+    validation = cli.run(
+        ["validate", relative_to_language_root(manifest_path)], cwd=language_root()
+    )
     if not validation.get("valid"):
         raise SystemExit(f"frozen manifest failed validation: {validation}")
-    obligations = cli.run(["obligations", relative_to_language_root(manifest_path)], cwd=language_root())
+    obligations = cli.run(
+        ["obligations", relative_to_language_root(manifest_path)], cwd=language_root()
+    )
     obligation_records = (
-        obligations if isinstance(obligations, list) else obligations.get("obligations", [])
+        obligations
+        if isinstance(obligations, list)
+        else obligations.get("obligations", [])
     )
     unresolved = [
         o.get("identity")
@@ -232,7 +246,9 @@ def build_target(cli: Mncs, target: dict, workdir: Path) -> dict:
             ["experiment", "compare", str(result_paths[0]), str(result_paths[1])],
             cwd=language_root(),
         )
-        comparison_path.write_text(json.dumps(comparison, indent=1, sort_keys=True) + "\n")
+        comparison_path.write_text(
+            json.dumps(comparison, indent=1, sort_keys=True) + "\n"
+        )
 
     # 6. Candidate freeze record binding every identity in the round.
     record = {
@@ -380,6 +396,104 @@ def build_generation_graph(target: dict, workdir: Path, freeze_record: dict) -> 
     return graph
 
 
+def build_specialist_generation_records(target: dict, workdir: Path) -> list[dict]:
+    """Build a deterministic MNEL-shaped specialist succession chain.
+
+    The fixture uses serialized artifact-shaped values so the Lineage builder
+    can exercise the cross-repository contract without importing MNEL's
+    training runtime. A real MNEL artifact can be passed to the same record
+    builder by an integration harness.
+    """
+
+    name = target["name"]
+    role = "control.tool-family-routing"
+    root_model = digest({"target": name, "specialist": role, "generation": "root"})
+    root_generation = digest({"target": name, "generation": "root"})
+    root_artifact = digest({"target": name, "artifact": "root"})
+    parent = {"generation_id": root_generation, "model_identity": root_model}
+    contract = digest({"target": name, "contract": "specialist-v1"})
+
+    def artifact(label: str, parent_identity: str, negative: list[str]) -> dict:
+        envelope = {"max_iterations": 4, "maximum_context_observations": 32}
+        envelope["envelope_identity"] = digest(envelope)
+        value = {
+            "schema": "mnel-recurrent-specialist-artifact/0.1",
+            "authority": "diagnostic-only",
+            "provider_id": "mnel-bounded-recurrent-specialist/0.1",
+            "provider_abi": "mnel-specialist-provider-abi/0.1",
+            "target_role": role,
+            "artifact_identity": "",
+            "model_identity": "",
+            "parent_model_identity": parent_identity,
+            "generation_identity": digest({"target": name, "generation": label}),
+            "training_dataset_identity": digest({"target": name, "dataset": label}),
+            "training_spec_identity": digest({"target": name, "spec": label}),
+            "checkpoint_identity": digest({"target": name, "checkpoint": label}),
+            "calibration_identity": digest({"target": name, "calibration": label}),
+            "operating_envelope": envelope,
+            "negative_memory": negative,
+            "inherited_strategies": ["prefer schema-bound family identity"],
+            "known_counterexamples": ["ambiguous family proposal"],
+            "prior_failure_causes": ["stale catalog"],
+            "semantics": "identity-bound-learned-specialist; diagnostic-only; not-a-verdict",
+        }
+        model_content = dict(value)
+        model_content.pop("model_identity")
+        model_content.pop("artifact_identity")
+        value["model_identity"] = digest(model_content)
+        artifact_content = dict(value)
+        artifact_content.pop("artifact_identity")
+        value["artifact_identity"] = digest(artifact_content)
+        return value
+
+    candidate_g1 = artifact("g1", root_model, ["ambiguous catalog must escalate"])
+    record_g1 = build_specialist_generation_record(
+        parent=parent,
+        candidate_artifact=candidate_g1,
+        evaluation={
+            "target_status": "PASS",
+            "protected_status": "PASS",
+            "evidence_epoch": 1,
+            "current_epoch": 1,
+        },
+        contract_identity=contract,
+        proposer_identity="mnel-proposer-v1",
+        evaluator_identity="independent-evaluator-v1",
+        promotion_authority_identity="lineage-promoter-v1",
+        rollback_target_artifact_identity=root_artifact,
+        rollback_status="READY",
+    )
+    candidate_g2 = artifact(
+        "g2", record_g1["candidate"]["model_identity"], ["role mismatch"]
+    )
+    record_g2 = build_specialist_generation_record(
+        parent={
+            "generation_id": record_g1["generation_id"],
+            "model_identity": record_g1["candidate"]["model_identity"],
+        },
+        candidate_artifact=candidate_g2,
+        evaluation={
+            "target_status": "PASS",
+            "protected_status": "PASS",
+            "evidence_epoch": 1,
+            "current_epoch": 2,
+        },
+        contract_identity=contract,
+        proposer_identity="mnel-proposer-v2",
+        evaluator_identity="independent-evaluator-v2",
+        promotion_authority_identity="lineage-promoter-v2",
+        rollback_target_artifact_identity=record_g1["candidate"]["artifact_identity"],
+        rollback_status="READY",
+    )
+    output_dir = workdir / name
+    output_dir.mkdir(parents=True, exist_ok=True)
+    for label, record in (("g1", record_g1), ("g2", record_g2)):
+        (output_dir / f"specialist-generation-record-{label}.json").write_text(
+            json.dumps(record, indent=1, sort_keys=True) + "\n"
+        )
+    return [record_g1, record_g2]
+
+
 def check_generation_graph(graph: dict) -> None:
     """Structural integrity of the reconstructed lineage."""
     ids = {g["generation_id"]: g for g in graph["generations"]}
@@ -422,6 +536,10 @@ def main() -> int:
         graph = build_generation_graph(target, workdir, summary[-1]["record"])
         check_generation_graph(graph)
         summary[-1]["generation_graph_reconstructed"] = True
+        specialist_records = build_specialist_generation_records(target, workdir)
+        summary[-1]["specialist_generation_records"] = [
+            record["record_identity"] for record in specialist_records
+        ]
 
     report = {
         "schema_version": "mncs-lineage/build-report/0.1",
@@ -438,11 +556,19 @@ def main() -> int:
             target_dir = workdir / target["name"]
             originals = {
                 name: (target_dir / name).read_bytes()
-                for name in ("candidate-freeze-record.json", "generation-graph.json")
+                for name in (
+                    "candidate-freeze-record.json",
+                    "generation-graph.json",
+                    "specialist-generation-record-g1.json",
+                    "specialist-generation-record-g2.json",
+                )
             }
             build_target(cli, target, workdir)
-            graph = build_generation_graph(target, workdir, json.loads(originals["candidate-freeze-record.json"]))
+            graph = build_generation_graph(
+                target, workdir, json.loads(originals["candidate-freeze-record.json"])
+            )
             check_generation_graph(graph)
+            build_specialist_generation_records(target, workdir)
             for name, original_bytes in originals.items():
                 if (target_dir / name).read_bytes() != original_bytes:
                     print(f"DETERMINISM FAILURE: {target['name']} {name} differs")
