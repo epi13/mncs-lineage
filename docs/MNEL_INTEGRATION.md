@@ -141,6 +141,20 @@ successor proposal
 
 The expected effects are predictions. They do not become evidence until tested.
 
+## Versioned specialist-generation record
+
+The executable bridge is `tools/specialist_lineage.py` and
+`schemas/specialist-generation-record.schema.json`. It consumes an MNEL recurrent
+specialist artifact by identity, preserving the model, parent model, generation,
+dataset, training specification, checkpoint, calibration, operating-envelope, and
+provider-role fields. It emits explicit succession, inheritance, evaluation, and
+rollback sections. Strategies, counterexamples, failure causes, and negative memory
+are copied as diagnostic guidance with `eligible_for_promotion_evidence: false`;
+historical evidence is never silently current. `language/specialist-lineage.mncs`
+executes the matching fail-closed disposition and inheritance rules on both reference
+backends. The deterministic builder writes G1/G2 records under
+`artifacts/lineage/<target>/` and its `--check` mode verifies byte-identical replay.
+
 ## Feedback from Lineage into MNEL
 
 Promotion and rejection outcomes should themselves become eligible experimental material for later MNEL studies.

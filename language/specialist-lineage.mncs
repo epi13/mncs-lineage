@@ -1,0 +1,82 @@
+mncs 0.5;
+
+// Executable specialist succession semantics.  The model artifact is produced
+// by MNEL; this module decides only how a generation may be admitted.
+module lineage.specialist.v1;
+
+enum EvaluationStatus { PASS, FAIL, UNKNOWN }
+enum RollbackStatus { READY, MISSING, FAILED }
+enum SpecialistDisposition { PROMOTED, REJECTED, HOLD_UNKNOWN }
+enum InheritedEvidenceClass { DIAGNOSTIC_ONLY, CURRENT_PROMOTION_EVIDENCE }
+
+record SpecialistEvaluation {
+    target: EvaluationStatus,
+    protected: EvaluationStatus,
+    rollback: RollbackStatus,
+    authority_independent: bool,
+}
+
+fn inherited_evidence_eligible(kind: InheritedEvidenceClass) -> (eligible: bool)
+    ensures inherited_guidance_is_not_promotion_evidence
+{
+    return match kind {
+        DIAGNOSTIC_ONLY => false,
+        CURRENT_PROMOTION_EVIDENCE => true,
+    };
+}
+
+fn specialist_disposition(evaluation: SpecialistEvaluation) -> (decision: SpecialistDisposition)
+    requires generation_record_is_bounded
+    ensures fail_closed_specialist_succession
+{
+    let target_failed: bool = match evaluation.target {
+        FAIL => true,
+        PASS => false,
+        UNKNOWN => false,
+    };
+    let protected_failed: bool = match evaluation.protected {
+        FAIL => true,
+        PASS => false,
+        UNKNOWN => false,
+    };
+    if target_failed {
+        return SpecialistDisposition.REJECTED;
+    }
+    if protected_failed {
+        return SpecialistDisposition.REJECTED;
+    }
+    let target_unknown: bool = match evaluation.target {
+        UNKNOWN => true,
+        PASS => false,
+        FAIL => false,
+    };
+    let protected_unknown: bool = match evaluation.protected {
+        UNKNOWN => true,
+        PASS => false,
+        FAIL => false,
+    };
+    if target_unknown {
+        return SpecialistDisposition.HOLD_UNKNOWN;
+    }
+    if protected_unknown {
+        return SpecialistDisposition.HOLD_UNKNOWN;
+    }
+    if evaluation.authority_independent {
+        return match evaluation.rollback {
+            READY => SpecialistDisposition.PROMOTED,
+            MISSING => SpecialistDisposition.REJECTED,
+            FAILED => SpecialistDisposition.REJECTED,
+        };
+    }
+    return SpecialistDisposition.REJECTED;
+}
+
+fn rollback_required(decision: SpecialistDisposition) -> (required: bool)
+    ensures promotion_requires_rollback
+{
+    return match decision {
+        PROMOTED => true,
+        REJECTED => true,
+        HOLD_UNKNOWN => true,
+    };
+}

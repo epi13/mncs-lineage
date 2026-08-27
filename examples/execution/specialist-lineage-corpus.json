@@ -1,0 +1,54 @@
+{
+  "schema_version": "0.1",
+  "name": "mncs-lineage-specialist-succession-v1",
+  "cases": [
+    {
+      "id": "inherited-guidance-is-not-promotion-evidence",
+      "request": {
+        "schema_version": "0.1",
+        "target": {
+          "module": "lineage.specialist.v1",
+          "function": "inherited_evidence_eligible"
+        },
+        "arguments": [
+          {
+            "finite": {
+              "type_identity": "mncs:0.2:finite-type:lineage.specialist.v1::InheritedEvidenceClass",
+              "variant_identity": "mncs:0.2:finite-variant:lineage.specialist.v1::InheritedEvidenceClass::DIAGNOSTIC_ONLY",
+              "discriminant": 0
+            }
+          }
+        ],
+        "step_budget": 128
+      },
+      "expected_status": "returned",
+      "maximum_steps": 20000,
+      "prohibit_unexpected_effects": true,
+      "expected": [{"boolean": {"value": false}}]
+    },
+    {
+      "id": "rollback-ready-promotion-retains-recovery",
+      "request": {
+        "schema_version": "0.1",
+        "target": {
+          "module": "lineage.specialist.v1",
+          "function": "rollback_required"
+        },
+        "arguments": [
+          {
+            "finite": {
+              "type_identity": "mncs:0.2:finite-type:lineage.specialist.v1::SpecialistDisposition",
+              "variant_identity": "mncs:0.2:finite-variant:lineage.specialist.v1::SpecialistDisposition::PROMOTED",
+              "discriminant": 0
+            }
+          }
+        ],
+        "step_budget": 128
+      },
+      "expected_status": "returned",
+      "maximum_steps": 20000,
+      "prohibit_unexpected_effects": true,
+      "expected": [{"boolean": {"value": true}}]
+    }
+  ]
+}
