@@ -41,7 +41,13 @@ TARGETS = [
         "name": "synthetic-lineage-g0",
         "source": "language/synthetic-lineage-g0.mncs",
         "corpus": "examples/execution/synthetic-lineage-g0-corpus.json",
-        "backends": ["mncs-research-bytecode", "mncs-portable-wasm-mvp"],
+        "backends": [
+            "mncs-research-bytecode",
+            "mncs-portable-wasm-mvp",
+            "mncs-c11",
+            "mncs-llvm-ir",
+            "mncs-cranelift",
+        ],
     },
 ]
 
@@ -111,6 +117,48 @@ def language_root() -> Path:
     raise SystemExit(
         "unable to locate the mncs-language checkout; set MNCS_LANGUAGE_DIR"
     )
+
+
+def toolchain_identity(cli: Mncs) -> dict:
+    """Identify the toolchain that verifies this round.
+
+    A freeze record without toolchain identity cannot answer which compiler
+    revision produced its evidence. Both fields are best-effort: a missing
+    value stays null rather than blocking the round.
+    """
+    version = None
+    try:
+        proc = subprocess.run(
+            cli.argv(["--version"]),
+            cwd=language_root(),
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=120,
+        )
+        text = (proc.stdout or proc.stderr or "").strip()
+        version = text or None
+    except (OSError, subprocess.TimeoutExpired):
+        version = None
+    revision = None
+    try:
+        proc = subprocess.run(
+            ["git", "rev-parse", "HEAD"],
+            cwd=language_root(),
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=60,
+        )
+        text = proc.stdout.strip()
+        revision = text or None
+    except (OSError, subprocess.TimeoutExpired):
+        revision = None
+    return {
+        "mncs_binary": cli.override or "cargo:mncs-cli",
+        "mncs_version": version,
+        "language_revision": revision,
+    }
 
 
 def compile_source(cli: Mncs, source: Path, out_dir: Path) -> dict:
@@ -239,21 +287,39 @@ def build_target(cli: Mncs, target: dict, workdir: Path) -> dict:
         )
         result_paths.append(result_file)
 
-    comparison = None
-    if len(result_paths) == 2:
-        comparison_path = target_dir / "cross-backend-comparison.json"
-        comparison = cli.run(
-            ["experiment", "compare", str(result_paths[0]), str(result_paths[1])],
+    # Cross-backend agreement: every backend after the first is compared
+    # against the baseline result, so promotion decisions are pinned
+    # identical across the whole current backend envelope.
+    comparison_path = target_dir / "cross-backend-comparison.json"
+    baseline_backend = target["backends"][0]
+    baseline_path = result_paths[0]
+    comparisons = []
+    for backend, result_path in zip(target["backends"][1:], result_paths[1:]):
+        verdict = cli.run(
+            ["experiment", "compare", str(baseline_path), str(result_path)],
             cwd=language_root(),
         )
-        comparison_path.write_text(
-            json.dumps(comparison, indent=1, sort_keys=True) + "\n"
+        comparisons.append(
+            {"backend": backend, "baseline_backend": baseline_backend, **verdict}
         )
+    comparison = {
+        "schema_version": "mncs-lineage/cross-backend-comparison/0.2",
+        "baseline_backend": baseline_backend,
+        "comparisons": comparisons,
+        "all_agree": all(
+            item.get("same_semantics")
+            and item.get("same_hir")
+            and item.get("bounded_behavior_agrees")
+            for item in comparisons
+        ),
+    }
+    comparison_path.write_text(json.dumps(comparison, indent=1, sort_keys=True) + "\n")
 
     # 6. Candidate freeze record binding every identity in the round.
     record = {
         "schema_version": "mncs-lineage/candidate-freeze-record/0.1",
         "target": target["name"],
+        "toolchain": toolchain_identity(cli),
         "parent_generation": {
             "role": "lineage-root",
             "generation_id": f"mncs-lineage:generation:{target['name']}:g0",
@@ -297,11 +363,7 @@ def build_target(cli: Mncs, target: dict, workdir: Path) -> dict:
             },
         ],
         "experiments": experiments,
-        "cross_backend_comparison_sha256": (
-            sha256_hex((target_dir / "cross-backend-comparison.json").read_bytes())
-            if comparison is not None
-            else None
-        ),
+        "cross_backend_comparison_sha256": sha256_hex(comparison_path.read_bytes()),
     }
     record_path = target_dir / "candidate-freeze-record.json"
     record_path.write_text(json.dumps(record, indent=1, sort_keys=True) + "\n")
@@ -558,6 +620,7 @@ def main() -> int:
                 name: (target_dir / name).read_bytes()
                 for name in (
                     "candidate-freeze-record.json",
+                    "cross-backend-comparison.json",
                     "generation-graph.json",
                     "specialist-generation-record-g1.json",
                     "specialist-generation-record-g2.json",

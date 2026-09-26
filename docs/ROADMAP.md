@@ -194,7 +194,7 @@ Delivered in the first milestone (see [LANGUAGE_IMPLEMENTATION.md](LANGUAGE_IMPL
   with evidence invalidation on change;
 - branching lineage representation (rejected / unknown / promoted siblings)
   and a deterministically reconstructed G0->G1->G2 generation graph;
-- deterministic replay sealed across two backend realizations.
+- deterministic replay sealed across all five backend realizations.
 
 Language changes this milestone forced are recorded in
 [MNCS_LANGUAGE_FINDINGS.md](MNCS_LANGUAGE_FINDINGS.md): interleaved

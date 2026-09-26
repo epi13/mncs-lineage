@@ -13,7 +13,7 @@ executed through the reference toolchain.
 | `language/lineage-core.mncs` | executable vocabulary: `Verdict`, structured `UnknownReason`, `ClaimVerdict` well-formedness, evidence freshness reclassification, authority independence |
 | `language/synthetic-lineage-g0.mncs` | deterministic G0 -> G1 succession experiment: identity freshness over the dependency tuple, fail-closed candidate disposition, branching selection policy, authority gates |
 | `examples/execution/synthetic-lineage-g0-corpus.json` | 24 sealed corpus cases covering the full topology (C1 REJECT / C2 UNKNOWN / C3 PROMOTE), evidence invalidation, authority violations, rollback gates |
-| `tools/build_lineage_artifacts.py` | deterministic builder: compile -> bind contract evidence -> freeze manifest -> run experiments on both backends -> cross-backend comparison -> freeze record + G0->G1->G2 generation graph |
+| `tools/build_lineage_artifacts.py` | deterministic builder: compile -> bind contract evidence -> freeze manifest -> run experiments on all five backends -> cross-backend comparison (each backend vs the bytecode baseline) -> freeze record + G0->G1->G2 generation graph |
 | `tools/invalidate_evidence_probe.py` | proves a changed successor artifact invalidates parent evidence and requires re-evaluation |
 | `tools/mncs_lineage_forge_provider.py` + `mncs-forge.toml` | Forge Provider Protocol 0.1 adapter exposing lineage verifications as bounded workflows |
 | `tests/` | pytest suite running everything against the real toolchain |
@@ -97,6 +97,18 @@ inspection. Round-trip behavior is preserved where it matters:
 source text -> canonical semantic form (fingerprinted) -> frozen manifest ->
 freeze record; every hop keeps authority, evidence, identity, inheritance,
 and provenance explicit. The builder demonstrates the pipeline deterministically.
+
+## Current toolchain position (2026-09-26)
+
+Sources stay on sealed profile 0.5 deliberately: `ensures`/`requires`
+contract clauses still elaborate on the current toolchain
+(`mncs-language` `066897e`), obligations discharge through the
+current obligation engine, and the full suite is green across all
+five backends. Bumping profiles would be version-string churn with
+zero semantic change; Doctor's `version-drift` infos are
+acknowledged, not actioned. The freeze record now pins the verifying
+toolchain (`toolchain.mncs_version` + `language_revision`), so
+evidence always answers which compiler revision produced it.
 
 ## Relationship to the family
 

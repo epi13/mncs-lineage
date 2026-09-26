@@ -52,8 +52,14 @@ def test_lineage_sources_validate_through_reference_front_end():
         assert report["errors"] == []
 
 
-def test_specialist_succession_semantics_execute_on_both_backends():
-    for backend in ("mncs-research-bytecode", "mncs-portable-wasm-mvp"):
+def test_specialist_succession_semantics_execute_on_all_backends():
+    for backend in (
+        "mncs-research-bytecode",
+        "mncs-portable-wasm-mvp",
+        "mncs-c11",
+        "mncs-llvm-ir",
+        "mncs-cranelift",
+    ):
         result = run_mncs(
             [
                 "experiment",
@@ -131,18 +137,40 @@ def test_corpus_covers_topology_authority_and_invalidation():
     assert "c1-target-improves-but-protected-regresses" in by_id
 
 
-def test_frozen_candidate_passes_on_both_backends():
+def test_frozen_candidate_passes_on_all_backends():
     summary = builder.build_target(builder.Mncs(), builder.TARGETS[0], REPO_ROOT / "artifacts" / "lineage")
     record = summary["record"]
     assert record["schema_version"] == "mncs-lineage/candidate-freeze-record/0.1"
-    assert len(record["experiments"]) == 2
+    assert len(record["experiments"]) == 5
     backends = {e["backend"]: e["status"] for e in record["experiments"]}
     assert backends == {
         "mncs-research-bytecode": "PASS",
         "mncs-portable-wasm-mvp": "PASS",
+        "mncs-c11": "PASS",
+        "mncs-llvm-ir": "PASS",
+        "mncs-cranelift": "PASS",
     }
     assert record["evidence_binding"]["remaining_unresolved_obligations"] == []
     assert len(record["evidence_binding"]["discharged_contracts"]) >= 10
+
+
+def test_freeze_record_pins_toolchain_identity():
+    workdir = REPO_ROOT / "artifacts" / "lineage"
+    record_path = workdir / "synthetic-lineage-g0" / "candidate-freeze-record.json"
+    if not record_path.exists():
+        builder.build_target(builder.Mncs(), builder.TARGETS[0], workdir)
+    record = json.loads(record_path.read_text())
+    toolchain = record["toolchain"]
+    assert toolchain["mncs_binary"]
+    assert toolchain["mncs_version"]
+    expected_revision = subprocess.run(
+        ["git", "rev-parse", "HEAD"],
+        capture_output=True,
+        text=True,
+        check=False,
+        cwd=builder.language_root(),
+    ).stdout.strip()
+    assert toolchain["language_revision"] == expected_revision
 
 
 def test_freeze_record_binds_candidate_identity_inputs():
@@ -220,9 +248,13 @@ def test_cross_backend_behavior_agrees():
     if not comparison_path.exists():
         builder.build_target(builder.Mncs(), builder.TARGETS[0], REPO_ROOT / "artifacts" / "lineage")
     comparison = json.loads(comparison_path.read_text())
-    assert comparison["same_semantics"] is True
-    assert comparison["same_hir"] is True
-    assert comparison["bounded_behavior_agrees"] is True
+    assert comparison["schema_version"] == "mncs-lineage/cross-backend-comparison/0.2"
+    assert len(comparison["comparisons"]) == 4
+    assert comparison["all_agree"] is True
+    for verdict in comparison["comparisons"]:
+        assert verdict["same_semantics"] is True
+        assert verdict["same_hir"] is True
+        assert verdict["bounded_behavior_agrees"] is True
 
 
 # ---------------------------------------------------------------------------

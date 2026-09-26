@@ -6,7 +6,7 @@ repository also exposes through pytest):
 
 - ``mncs-lineage-source-validation``      validate every succession module;
 - ``mncs-lineage-succession-experiment``  rebuild frozen artifacts and require
-                                          PASS on both reference backends;
+                                          PASS on all five backends;
 - ``mncs-lineage-evidence-invalidation``  confirm stale evidence cannot be
                                           reused after a policy change;
 - ``mncs-lineage-determinism``            reproduce freeze records exactly.
@@ -124,7 +124,7 @@ def succession_experiment(request: dict[str, Any]) -> dict[str, object]:
     return response(
         request,
         "PASS",
-        "frozen candidate reached PASS on both reference backends",
+        "frozen candidate reached PASS on all five backends",
         witnesses=[*witnesses, {"backends": list(statuses), "record": str(record_path.relative_to(REPO_ROOT))}],
     )
 
