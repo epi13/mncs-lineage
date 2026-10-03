@@ -1,0 +1,17 @@
+{
+  "schema_version": "mncs.project-intent/1",
+  "purpose": "Recursive successor synthesis for machine-native AI systems: isolated successor candidates, selected inheritance, bounded development, and promotion only when independently governed evidence satisfies an explicit succession contract.",
+  "entry": [
+    "python3 -m pytest tests/"
+  ],
+  "milestones": [
+    {
+      "id": "mncs-lineage:projection-conformance",
+      "title": "Declared ambient projection surfaces satisfy their contract",
+      "subject_slot": "declarations",
+      "evidence": "projection-conformance",
+      "dependencies": [],
+      "blockers": []
+    }
+  ]
+}

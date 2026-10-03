@@ -1,5 +1,21 @@
 # MNCS Lineage
 
+<!-- MNCS:generated:begin -->
+## Project entry
+
+Recursive successor synthesis for machine-native AI systems: isolated successor candidates, selected inheritance, bounded development, and promotion only when independently governed evidence satisfies an explicit succession contract.
+
+```bash
+python3 -m pytest tests/
+```
+
+Declared capabilities (declarations do not establish execution health):
+
+- `successor-synthesis/0.1` — mncs-library (experimental)
+
+Semantic sources and ownership: `.mncs/projections.json`.
+<!-- MNCS:generated:end -->
+
 **Recursive successor synthesis for machine-native AI systems.**
 
 MNCS Lineage is an experimental research project exploring **generational machine intelligence** within the Machine-Native Complexity Standard (MNCS) ecosystem.

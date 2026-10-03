@@ -1,0 +1,22 @@
+{
+  "capabilities": [
+    {
+      "contract": "successor-synthesis",
+      "fingerprint_sources": [
+        "language/"
+      ],
+      "kind": "mncs-library",
+      "stability": "experimental",
+      "version": "0.1"
+    }
+  ],
+  "dependencies": [],
+  "entry": [
+    "python3 -m pytest tests/"
+  ],
+  "purpose": "Recursive successor synthesis for machine-native AI systems: isolated successor candidates, selected inheritance, bounded development, and promotion only when independently governed evidence satisfies an explicit succession contract.",
+  "repository": "mncs-lineage",
+  "schema_version": "mncs.project-view/1",
+  "source_identity": "sha256:f1629a35cd1460af6797844356f85a71dce9ba61548763af532713f11ae6f101",
+  "structure": {}
+}
