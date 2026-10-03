@@ -1,5 +1,8 @@
 # MNCS Lineage
 
+<!-- MNCS:generated:begin -->
+<!-- MNCS:generated:end -->
+
 **Recursive successor synthesis for machine-native AI systems.**
 
 MNCS Lineage is an experimental research project exploring **generational machine intelligence** within the Machine-Native Complexity Standard (MNCS) ecosystem.
